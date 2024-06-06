@@ -1,0 +1,49 @@
+pipeline {
+    agent any 
+    tools {
+        maven 'maven383'
+    }
+    environment {
+		  IMAGE_TAG = "${BUILD_NUMBER}"
+      IMG_SPRING = "amsrest-e2e-ci_cd-backend"
+      // getting stored credentials
+      DOCKERHUB_CREDENTIALS = credentials('dockerhub_cred')
+    }
+    stages {
+        // ##################################################
+        // ### Docker
+        // ##################################################	    
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t ${IMG_SPRING} .'
+                sh 'docker tag ${IMG_SPRING} ${DOCKERHUB_CREDENTIALS_USR}/${IMG_SPRING}:${BUILD_NUMBER}'
+                echo 'Docker image built successfully!'
+            }
+        }
+
+
+        stage('Push Image') {
+            steps {
+                echo 'Logon in to docker hub'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin docker.io'
+                echo 'Login Successfull'
+                sh 'docker push ${DOCKERHUB_CREDENTIALS_USR}/${IMG_SPRING}:${BUILD_NUMBER}'
+                echo 'Docker pushed successfully!'
+                sh 'docker logout' 
+            }
+        }
+
+
+/*
+        stage('**Deploy Application**') {
+            steps {
+                script {
+                    xxx
+                }
+            }
+        }
+*/
+        // ##################################################
+    }
+}
