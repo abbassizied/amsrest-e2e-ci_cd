@@ -14,9 +14,11 @@ pipeline {
         // ### Docker
         // ##################################################	    
 
-    stage('foo') {
+    stage('Verify Docker is available') {
       steps {
-        sh "docker version" // DOCKER_CERT_PATH is automatically picked up by the Docker client
+          script {
+              sh 'docker version'
+          }
       }
     }
 
