@@ -4,10 +4,10 @@ pipeline {
         maven 'maven383'
     }
     environment {
-		  IMAGE_TAG = "${BUILD_NUMBER}"
-      IMG_SPRING = "amsrest-e2e-ci_cd-backend"
-      // getting stored credentials
-      DOCKERHUB_CREDENTIALS = credentials('dockerhub_cred')
+        IMAGE_TAG = "${BUILD_NUMBER}"
+        IMG_SPRING = "amsrest-e2e-ci_cd-backend"
+        // getting stored credentials
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub_cred')
     }
     stages {
         // ##################################################
@@ -15,11 +15,7 @@ pipeline {
         // ##################################################	    
 
         stage('Build Docker Image') {
-            agent {
-            	docker { image 'maven:3.8.3-adoptopenjdk-17' }
-            }
             steps {
-		sh 'mvn --version'
                 sh 'docker build -t ${IMG_SPRING} .'
                 sh 'docker tag ${IMG_SPRING} ${DOCKERHUB_CREDENTIALS_USR}/${IMG_SPRING}:${BUILD_NUMBER}'
                 echo 'Docker image built successfully!'
