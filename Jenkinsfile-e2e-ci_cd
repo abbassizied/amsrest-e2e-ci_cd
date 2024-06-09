@@ -46,6 +46,12 @@
 
     stage('OWASP Dependency Check') {
         steps {
+            waitForQualityGate abortPipeline: false, credentialsId: 'sq1'
+        }
+    }
+
+    stage('OWASP Dependency Check') {
+        steps {
             dependencyCheck additionalArguments: '--scan target/', odcInstallation: 'owasp-dc'
         }
     }
