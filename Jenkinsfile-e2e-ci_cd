@@ -44,7 +44,7 @@
      }
 
 
-    stage('OWASP Dependency Check') {
+    stage('quality gate') {
         steps {
             waitForQualityGate abortPipeline: false, credentialsId: 'sq1'
         }
